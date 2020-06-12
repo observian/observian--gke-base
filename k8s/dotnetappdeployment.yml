@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  namespace: demo
+  labels:
+    app: demoapp
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: demoapp
+  template:
+    metadata:
+      labels:
+        app: demoapp
+    spec:
+      containers:
+        - name: dotnet-app-demo
+          image: mcr.microsoft.com/dotnet/core/samples:aspnetapp
+          imagePullPolicy: Always
+          workingDir: /app
+          resources:
+            requests:
+              cpu: "0.15"
+              memory: "700Mi"
+          ports:
+            - containerPort: 80

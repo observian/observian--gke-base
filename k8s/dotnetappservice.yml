@@ -1,0 +1,30 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-service
+  namespace: demo
+  labels:
+    app: demoapp
+spec:
+  type: LoadBalancer
+  selector:
+    app: demoapp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "demo-ingress"
+  namespace: demo
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: "demo-service"
+              servicePort: 80
